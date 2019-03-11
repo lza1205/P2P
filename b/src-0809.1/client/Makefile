@@ -1,0 +1,10 @@
+obj-y += client_aff.o
+obj-y += client_net_data.o
+obj-y += client_recv.o
+obj-y += client_send.o
+obj-y += command_client.o
+obj-y += get_config.o
+obj-y += updata.o
+obj-y += client_node_list.o
+obj-y += client_interface.o
+obj-y += p2p_thread.o

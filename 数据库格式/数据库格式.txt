@@ -1,0 +1,8 @@
+CREATE TABLE device(
+	name VARCHAR(50), 
+	passwd VARCHAR(50),
+	ip VARCHAR(50),
+	port VARCHAR(50),
+	login_cnt VARCHAR(50),
+	is_online VARCHAR(50)
+);

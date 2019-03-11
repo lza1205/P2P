@@ -1,0 +1,145 @@
+/*--------------------------------------------------------------------
+　　　/\~~~~~~~~~~~~~\　　　▓　　^*^　　　☆　　$$　 .☆ 
+　　./　\~~~▓~　 ~~~~\ ◆　　圣诞 .快乐　 *　 $◢◣$　 * 
+　　/ ^^ \ ══════\.◆　　　 *　*　　*　 $◢★◣$　 * 
+　..▎[]　▎田　田 ▎ |┃◆　 .　　　　　*　 $◢■■◣$　 * 
+　&&▎　　▎　　　 ▎'|'▎ @　　　　　　　* $◢■■■◣$ * 
+＃ ■■■■■■■■■■〓▄▃▂▁愿你圣诞快乐︸︸||︸︸ 
+
+
+				说明文档
+版本：1.0
+时间：2015.08.02
+作者：Faker
+
+--------------------------------------------------------------------*/
+
+
+下载源码：
+	首先，由于公司网络不让上传，百度云那个比较旧。所以源码找本人要一份，联系QQ 120515692
+	
+准备好编译环境；	
+	个人编译环境、测试环境均为 Ubuntu-1204
+	gcc-4.6
+	make
+
+下载安装好依赖库：
+	P2P 客户端依赖库有 ： libthread openssl libjson
+	P2P 服务器依赖库有：	libthread openssl libjson mysql
+	
+	安装步骤：
+	apt-get install openssl
+	apt-get install libjosn0-dev
+	
+	服务器还需要安装 mysql 数据库
+	1. sudo apt-get install mysql-server
+　　2. apt-get install mysql-client
+　　3. sudo apt-get install libmysqlclient-dev
+
+
+在源码目录下
+	直接make
+	如果提示无法链接到 -lp2p_cleint 话，不要管这个错误
+	ls 看下当前目录下是否生了下面两个动态库
+	
+	libp2p-client.so ：
+		P2P 客户端依赖的动态库
+	
+	libp2p-server.so ：
+		P2P 服务器端依赖的动态库
+		
+	如果有。则把这个两个库拷贝到 /usr/lib/
+	然后再次执行make
+	
+	没有报错的话的，会在当前目录下生成下面两个应用程序
+	p2p_client ：
+		P2P的简单客户端
+	p2p_server ：
+		P2P的简单服务器程序
+		
+		
+
+使用 p2p_client 应用程序
+	运行 程序：
+	root@iZ94rjc1u1jZ:/work/p2p/lib/src# ./p2p_client 
+	sys_info.json : 
+	{
+			 "log_path": ".\/",
+			 "name": "KNCO-11163E0019B4",
+			 "passwd": 305419896,
+			 "server_ip": "112.74.197.88",
+			 "server_port": 8000,
+			 "tcp_port": 8080,
+			 "my_port": 1111,
+			 "up_total_flow": "0",
+			 "down_total_flow": "0" 
+	}
+	my name is KNCO-11163E0019B4
+	my lan_ip: 112.74.197.88
+	port: 1111
+
+	client version :         client-15.07.27.1
+
+	connet to 112.74.197.88:8000.....
+	connet is ok!	
+
+	通过最后的一句 connet is ok! 我们可以看到客户端已经正确连接上服务器了，而且该服务器的IP为 112.74.197.88
+	同时再往上面看，可以看到 自己的名字为 KNCO-11163E0019B4
+	这个名字是怎么来的？因为P2P客户端之间的通信时通过名称区分的。所以每个客户端的名字必须是唯一的。
+所以，P2P客户端第一次启动的时候会随机生成一个名字，该名字前面四个字母是随机字母。后面跟着12位的 MAC 地址
+
+
+简单的集成命令：
+	p2p_client客户端集成了几个简单的测试命令
+	
+help
+	在命令行输入 ? ，会显示支持的命令
+	/------------------- Welcome to Faks -------------------/
+	You can enter the following command : 
+	[0]info       :   show my info 
+	[1]help       :   show help 
+	[2]client_list       :   show client listt 
+	[3]p2p_test_list       :   show p2p test list 
+	[4]p2p_sync_list       :   show p2p sync list 
+	[5]?       :   show help 
+	[6]call       :   you can call client 
+	[7]send       :   you can send msg to client 
+	[8]_send       :   you can send msg to client 
+	[9]net_data_list       :   show network data list 
+	[10]test       :   test 
+	/------------------- --------------- -------------------/
+
+其中一些命令是测试用的，比较常用的命令有：
+
+send
+	往对方发送一个消息
+	send Tom hello
+	向 Tom 发送 hello 。
+	client @KNCO-11163E0019B4: $ send Tom hello
+	client @KNCO-11163E0019B4: $ Tom is offline 
+	Tom is offline 
+	可以看到 Tom 是不在线的，发送是不成功的
+	
+	然后，Jack是在线的。我们发送给Jack,是可以成功的
+	client @KNCO-11163E0019B4: $ send Jack hello
+	client @KNCO-11163E0019B4: $ Jack is online 
+	recv hole 
+	recv turn ack, send is ok 
+	
+	我们看到Jack这边也是可以收到的信息的
+	client @Jack: $ recv from KNCO-11163E0019B4 's turn data : [hello] 
+	send hole 
+	第一行显示：收到来自 KNCO-11163E0019B4 的数据，内容为 hello
+
+call
+	获取一个客户端的信息，例如：
+	call Tom
+	获取一个名为 Tom 的客户端的信息
+	
+client @KNCO-11163E0019B4: $ call Tom
+client @KNCO-11163E0019B4: $ Tom is offline 
+	我们可以看到，Tom 是不在线的
+
+
+	
+	
