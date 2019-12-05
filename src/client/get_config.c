@@ -286,7 +286,7 @@ int sys_info_default(void)
 
 	rand_name();
 	sys_cfg.passwd = 0x12345678;
-	strcpy(sys_cfg.serverip, "112.74.197.88");
+	strcpy(sys_cfg.serverip, "106.13.62.194");
 	sys_cfg.ser_port = 8000;
 	sys_cfg.tcp_port = 8080;
 	sys_cfg.my_port = 3333;
@@ -332,7 +332,7 @@ void __get_config_for_json()
 	char __path[100];
 	unsigned char name[100];
 	
-	__json_key_to_string(sys_info_json, "name", sys_cfg.name_str, 30);
+	__json_key_to_string(sys_info_json, "name", sys_cfg.name_str, USER_NAME_LEN);
 //	printf("my name is %s\r\n", sys_cfg.myname);
 	__str_to_buf(sys_cfg.myname, sys_cfg.name_str);
 

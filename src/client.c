@@ -55,8 +55,10 @@ void *listen_phread(void *pdata)
 	struct listen *_listen;
 	_listen = (struct listen *)pdata;
 
+#if P2P_EN_UDP_HLOP
 	/* ¿ªÆôÕâ¸ölisten  */
 	listen_start(_listen);
+#endif
 
 	while(1)
 	{

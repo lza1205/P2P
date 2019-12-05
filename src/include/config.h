@@ -2,6 +2,8 @@
 #ifndef __CONFIG_H_
 #define __CONFIG_H_
 
+#define P2P_EN_UDP_HLOP		0	//是否启动打洞技术
+
 /* 服务器默认起始端口号 */
 #define SERVER_SYNC_PORT			8000
 
@@ -34,7 +36,7 @@
 #define UDP_PACK_MAX_SIZE				(10*1024)
 
 /* ID 名长度 */
-#define USER_NAME_LEN	8
+#define USER_NAME_LEN	20
 
 /* 密码长度 */
 #define USER_PASSWD_LEN	10

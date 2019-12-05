@@ -313,6 +313,9 @@ void __debug_data(void)
 /* 把数字用字符串显示出来 */
 void __buf_to_str(unsigned char *dest, unsigned char *buf, int len)
 {
+#if 1
+	memcpy(dest, buf, len);
+#else
 	int i;
 	int j = 0;
 	unsigned char th,tl;
@@ -331,11 +334,16 @@ void __buf_to_str(unsigned char *dest, unsigned char *buf, int len)
 			dest[j++] = (tl - 10 + 97);
 	}
 	dest[j] = 0;
+#endif
 }
 
 
 void __str_to_buf(unsigned char *dest, unsigned char *str)
 {
+#if 1
+	memcpy(dest, str, strlen(str) + 1);
+#else
+
 	unsigned char th,tl;
 	unsigned char _th, _tl;
 	int j = 0;
@@ -370,6 +378,7 @@ void __str_to_buf(unsigned char *dest, unsigned char *str)
 		dest[j] = tmp;
 		j ++;
 	}
+#endif
 }
 
 

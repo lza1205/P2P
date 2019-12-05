@@ -60,8 +60,10 @@ void p2p_sendto_node(struct p2p_node_info *node, int aff)
 		   		sizeof(struct sockaddr));
 			node->test_cnt --;
 		}else{
+			pthread_mutex_lock(&p2p_test_list_lock);
 			list_del(&(node->list));
 			p2p_test_node_num --;
+			pthread_mutex_unlock(&p2p_test_list_lock);
 			free(node);
 		}
 	}else if(node->list_typpe == 1){
@@ -76,8 +78,10 @@ void p2p_sendto_node(struct p2p_node_info *node, int aff)
 		   		sizeof(struct sockaddr));
 			node->sync_cnt --;
 		}else{
+			pthread_mutex_lock(&p2p_test_list_lock);
 			list_del(&(node->list));
 			p2p_test_node_num --;
+			pthread_mutex_unlock(&p2p_test_list_lock);
 			free(node);
 		}
 	}
@@ -91,7 +95,7 @@ struct p2p_node_info * __add_p2p_node
 	node = malloc(sizeof(struct p2p_node_info));
 	if (node != NULL)
 	{		
-		memcpy(node->name, info->name, USER_NAME_LEN);		
+		memcpy(node->name, info->name, USER_NAME_LEN);
 		strcpy(node->ip, info->ip);
 		
 		node->status = info->status;
@@ -153,10 +157,10 @@ struct p2p_node_info *find_from_list(unsigned char *name, struct list_head *list
 	list_for_each_entry_safe_reverse(pos,n,list_head,list, struct p2p_node_info)
 	{
 //		__buf_to_str(tmp, pos->name, 8);
-//		printf("find pos name [%s]\r\n", tmp);
+		printf("find pos name [%s]\r\n", name);
 		if(memcmp(pos->name, name, USER_NAME_LEN) == 0)
 		{
-//			printf("find 2\r\n");
+			printf("find 2\r\n");
 			pthread_mutex_unlock(&p2p_test_list_lock);
 			return pos;
 		}
@@ -403,6 +407,7 @@ int __p2p_send_data(unsigned char *name, unsigned int c_proto, char *buf, int le
 	
 	if(wait_flg == 0)
 		return ret;
+
 
 	/* 把数据添加到队列中去 */
 	

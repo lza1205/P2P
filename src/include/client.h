@@ -28,7 +28,7 @@
 
 #include "sound_proto.h"
 
-#define compages_head(head, air) __compages_head(head, air, sys_cfg.myname, sys_cfg.passwd)
+#define compages_head(head, air) __compages_head(head, air, sys_cfg.name_str, sys_cfg.passwd)
 
 struct sys_config{
 	int sockfd;			/* 套签字 */
@@ -50,7 +50,7 @@ struct sys_config{
 
 	unsigned int passwd;		/* 密码 */
 	unsigned char myname[USER_NAME_LEN];		/* 我的名字 */
-	unsigned char name_str[30];					/* 我的名字，字符串形式 */
+	unsigned char name_str[USER_NAME_LEN];					/* 我的名字，字符串形式 */
 
 	char *log_path;				/* 日志文件路径 */
 };

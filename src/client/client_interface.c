@@ -243,9 +243,13 @@ int p2p_client_init(void)
 int sendto_node_unreliable(char *name, unsigned int proto, char *buf, int len)
 {
 	int ret;
+	#if P2P_EN_UDP_HLOP
+	
 	struct client_node *cn;
 
 	ret = p2p_send_data(name, proto, buf, len);
+
+	
 	if(ret <= 0)
 	{
 		/* 发送失败的。要将改用户从P2P队列删除 */
@@ -265,6 +269,10 @@ int sendto_node_unreliable(char *name, unsigned int proto, char *buf, int len)
 			get_client_info(name);
 		}
 	}
+
+	#else
+	ret = send_client_data(name, proto, buf, len);
+	#endif
 	return ret;
 }
 

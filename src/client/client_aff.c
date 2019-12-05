@@ -24,7 +24,6 @@ void aff_server_get_client_ack(int sockfd, char *buf, int len, struct sockaddr_i
 		/* 添加到P2P链表 */
 		add_p2p_test_node(recv_proto);
 	}
-
 	recv_ack_wakeup();		//唤醒发送队列
 	client_inface.recv_node_info(sockfd, buf, len, clientaddr);
 }
@@ -170,6 +169,7 @@ void aff_client_p2p_sync(int sockfd, char *buf, int len, struct sockaddr_in *cli
 	
 	p2p_sendto(sockfd, (char *)send_buf, send_len, 0, (struct sockaddr *)clientaddr,
 		   sizeof(struct sockaddr));
+
 }
 
 void aff_client_p2p_sync_ack(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr)

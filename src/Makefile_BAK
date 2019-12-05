@@ -94,18 +94,26 @@ obj-server += hashtable/built-in.o
 obj-server += list/built-in.o
 obj-server += timer/built-in.o
 
-all: p2p_client p2p_server
+all:libp2p-server.so libp2p-server.a libp2p-client.so libp2p-client.a p2p_client p2p_server
 
 clean:
 	rm -f $(shell find -name "*.o")
 	rm -f $(TARGET)
+	
+libp2p-server.so:
+	make -C ./ -f $(TOPDIR)/Makefile.build
+	$(CC) $(LDFLAGS) $(INC) -shared -fPCI -o libp2p-server.so  $(obj-server) $(SER_LDLIB)
+	$(AR) -rsv libp2p-server.a  $(obj-server)
+	
+libp2p-client.so:
+	make -C ./ -f $(TOPDIR)/Makefile.build
+	$(CC) $(LDFLAGS) $(INC) -shared -fPCI -o libp2p-client.so  $(obj-client) $(LDLIB)
+	$(AR) -rsv libp2p-client.a   $(obj-client)
 
 p2p_client:client.o
-	make -C ./ -f $(TOPDIR)/Makefile.build
-	$(CC) $(LDFLAGS) $(INC) -o p2p_client client.o $(obj-client) $(LDLIB)
+	$(CC) $(LDFLAGS) $(INC) -o p2p_client client.o -lp2p-client $(LDLIB)
 	
 p2p_server:server.o
-	make -C ./ -f $(TOPDIR)/Makefile.build
 	$(CC) $(LDFLAGS) $(INC) -o p2p_server server.o $(obj-server) $(SER_LDLIB)
 	
 %.o:%.c
