@@ -208,7 +208,7 @@ int p2p_client_init(void)
 
 	/* AES256 加密初始化 */
 //	aes256_key_init();
-	set_aes256(1);			//开启 AES 256 加密方式
+	set_aes256(P2P_DEF_AES256);			//开启 AES 256 加密方式
 	
 	/* 检查下配置文件 */
 	get_config_for_json();

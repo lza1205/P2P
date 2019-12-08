@@ -53,7 +53,9 @@ void *server_recv_pthread(void *pdata)
 			/* È¨ÏŞ¼ì²é */
 
 //			dbg_printf("addr %p", val);
+			dump_data(recvbuf,ret);
 
+			printf("affairs is %d\r\n", head->affairs);
 			for(i = 0; aff_table[i].aff_fun != NULL; i++)
 			{
 				if(aff_table[i].aff == head->affairs)

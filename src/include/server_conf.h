@@ -11,6 +11,7 @@
 #include "all.h"
 #include "server.h"
 
+#define P2P_SERVER_SQL_AUTO_INSERT		0
 
 __SERVER_CONF_EXT__ struct json_object *server_conf_json;
 

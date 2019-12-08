@@ -10,9 +10,11 @@
 */
 void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr)
 {
+	int ret;
 	struct value *currentuser = NULL;
+	struct proto_s_login_ack ack;
 	char version[50];
-
+	char passwd[20];
 	struct check_head *head = (struct check_head *)buf;
 #if 0
 	dbg_printf("name %s  \npasswd %d \n",
@@ -24,17 +26,26 @@ void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clien
 	unsigned char name[30];
 	__buf_to_str(name, head->name, USER_NAME_LEN);
 	printf("name is %s\r\n", name);
+	#if P2P_SERVER_SQL_AUTO_INSERT
 	sql_table_insert("device", "name", name);
-	sql_table_update_int("device", "name", name, "passwd", head->passwd);
-	sql_table_update_string("device", "name", name, "ip", inet_ntoa(clientaddr->sin_addr));
-	sql_table_update_int("device", "name", name, "port", ntohs(clientaddr->sin_port));
-	sql_table_update_int("device", "name", name,"login_cnt", LOGIN_CNT_INIT);
+	#endif
+	ret = service_sql_select(name, passwd);
+	if(ret == 0)
+	{
+		sql_table_update_string("device", "name", name, "ip", inet_ntoa(clientaddr->sin_addr));
+		sql_table_update_int("device", "name", name, "port", ntohs(clientaddr->sin_port));
+		sql_table_update_int("device", "name", name,"login_cnt", LOGIN_CNT_INIT);
+		ack.ack = 0;
+	}else{
+		ack.ack = -1;
+	}
 
 	/* 向客户端应答数据 */
 	char send_buf[1204];
 	int send_len;
-	struct proto_s_login_ack ack;
-	ack.ack = 0;
+	
+
+	
 
 //	head->affairs = _aff_server_login_ack_;
 	update_head(head, _aff_server_login_ack_);
@@ -167,6 +178,8 @@ void aff_client_send_data(int sockfd, char *buf, int len, struct sockaddr_in *cl
 	proto = (struct proto_c_send_data *)(buf + sizeof(struct check_head));
 	unsigned char dest_name[30];
 	__buf_to_str(dest_name, proto->dest_name, USER_NAME_LEN);
+
+	printf("src name is %s dest name is %s\r\n", proto->src_name,proto->dest_name);
 	ret = sql_table_select("device", dest_name, "login_cnt", login_cnt);
 	if((ret != 0) || (atoi(login_cnt) < 0))
 	{

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
 	/* AES256 加密 */
 //	aes256_key_init();
-	set_aes256(1);			//开启 AES 256 加密方式
+	set_aes256(P2P_DEF_AES256);			//开启 AES 256 加密方式
 
 	/* 数据库初始化 */
 	service_sql_init();

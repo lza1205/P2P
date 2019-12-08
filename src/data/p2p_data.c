@@ -52,7 +52,7 @@ int __crc(char *buf, int len)
 /* 对头部进行数据校验 */
 int check_head_crc(struct check_head *head)
 {
-#if 1
+#if 0
 	int crc = 0;
 	crc = __crc((char *)head, sizeof(struct check_head) - sizeof(int));
 
@@ -75,9 +75,19 @@ void update_head(struct check_head *head, unsigned int air)
 	head->crc = __crc((char *)head, sizeof(struct check_head) - sizeof(int));
 }
 
+int dump_flg = 0;
+void dump_data(char *buf, int len)
+{
+	if(dump_flg)
+	{
+		hexdump(stdout, "== data ==",  
+                    (char *)buf,  
+                    len);
+	}
+}
 
 /***************************************
-函数名: get_sys_time
+函数名: __compages_head
 功能: 构造头部
 ***************************************/
 volatile unsigned int key_cnt = 0;

@@ -25,7 +25,7 @@
 static pthread_mutex_t mysql_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
-#define SELECT_QUERY "select * from mytable where name like '%s'"
+#define SELECT_QUERY "select * from device where name like '%s'"
 //#define ALL_QUERY "select * from mytable;"
 
 MYSQL mysql, *sock; //定义数据连接句柄
@@ -41,7 +41,7 @@ int service_sql_init(void)
 	mysql_init(&mysql);
 	/* 连接上数据库 */
 //	if(!(sock = mysql_real_connect(&mysql, "localhost", "root", "my-name-is?lza1205", "rt5350_user_list", 0, NULL, 0))){
-	if(!(sock = mysql_real_connect(&mysql, "localhost", "root", "123456", "p2p_user_list", 0, NULL, 0))){
+	if(!(sock = mysql_real_connect(&mysql, "localhost", "root", "lza1205", "p2p_user_list", 0, NULL, 0))){
 		fprintf(stderr, "Couldn't connect to engine!\n%s\n\n", mysql_error(&mysql));
 		perror("");
 		exit(1);
@@ -162,8 +162,8 @@ void __mysql_free_result(void)
 }
 
 
-#define UPDATE_STRING_QUERY "update mytable set %s=\'%s\' where name=\'%s\'"
-#define UPDATE_INT_QUERY "update mytable set %s=%d where name=\'%s\'"
+#define UPDATE_STRING_QUERY "update device set %s=\'%s\' where name=\'%s\'"
+#define UPDATE_INT_QUERY "update device set %s=%d where name=\'%s\'"
 
 /* 根据名字修改数据库中的某项 */
 int server_sql_update_string(char *name, char *key, char *val)

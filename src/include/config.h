@@ -3,6 +3,7 @@
 #define __CONFIG_H_
 
 #define P2P_EN_UDP_HLOP		0	//是否启动打洞技术
+#define P2P_DEF_AES256		0	//是否开启加密
 
 /* 服务器默认起始端口号 */
 #define SERVER_SYNC_PORT			8000
@@ -58,6 +59,7 @@ struct check_head{
 //	unsigned int type;		/* 类型 0 主机 1 APP*/
 	unsigned char name[USER_NAME_LEN];
 	unsigned int passwd;
+	unsigned char customer[USER_NAME_LEN];	//厂家ID
 //	char version[30];
 //	int timecnt[6];			/* 时间戳: 年月日时分秒 */
 	unsigned int key;		/* 数据包唯一编号 */

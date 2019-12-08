@@ -120,6 +120,17 @@ void __printenv(void)
 	printf("----------------------------------\r\n");
 }
 
+extern int dump_flg;
+void __dump(void)
+{
+	if(strcmp(gp_comman_tag[1], "on"))
+	{
+		dump_flg = 1;
+	}else if(strcmp(gp_comman_tag[1], "off")){
+		dump_flg = 0;
+	}
+}
+
 
 struct command_t gt_comman_server[] = {
 	{
@@ -145,6 +156,13 @@ struct command_t gt_comman_server[] = {
 		.com_fun 	= __printenv,
 		.tag_num	= 0,
 		.tag_p		= NULL,
+	},
+	{
+			.name		= "dump",
+			.com_fun	= __dump,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "dump recv data",
 	},
 	{
 		.name		= NULL,

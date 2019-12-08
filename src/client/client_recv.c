@@ -270,33 +270,23 @@ void init_network_pthread(void)
 /*
 	接收到数据第一次处理
 */
+extern int dump_flg;
 void resolve_recv_data(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr)
 {
-	struct proto_c_send_data *recv_proto;
-	recv_proto = (struct proto_c_send_data *)(buf + sizeof(struct check_head));
-
 //	printf("___ %d %d %d \r\n", (clientaddr->sin_port), ntohs(clientaddr->sin_port), htonl(clientaddr->sin_port));
 
-	add_recv_pthread_list(clientaddr, buf, len);
+	char *recv_data;
+	char name[30];
+	struct check_head *head = (struct check_head *)buf;
+	struct proto_c_send_data *recv_proto = (struct proto_c_send_data *)(buf + sizeof(struct check_head));
+	recv_data = (char *)(buf + sizeof(struct check_head) + sizeof(struct proto_c_send_data));
 
-#if 0
-	switch(recv_proto->c_proto)
-	{
-		/* 传输的是消息 */
-		case _proto_c_msg_:
-		{
-			/* 把数据添加到网络队列中去 */
-			//add_recv_data_list(buf, len, clientaddr);
-			add_recv_pthread_list(clientaddr, buf, len);
-			break;
-		}
-		/* 传输的是文件 */
-		case _proto_c_file_:
-		{
-			break;
-		}
-	}
-#endif
+	__buf_to_str(name, recv_proto->src_name, USER_NAME_LEN);
+	printf("recv from %s 's %s data : [%s] \r\n", name, 
+										((head->affairs == _aff_client_p2p_data_)?"stun":"turn"),
+										recv_data);	
+
+	dump_data(buf, len);
 }
 
 

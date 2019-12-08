@@ -84,6 +84,18 @@ void __send(void)
 	sendto_node_unreliable(buf, _proto_c_msg_, gp_comman_tag[2], strlen(gp_comman_tag[2]) + 1);
 }
 
+
+extern int dump_flg;
+void __cli_dump(void)
+{
+	if(strcmp(gp_comman_tag[1], "on"))
+	{
+		dump_flg = 1;
+	}else if(strcmp(gp_comman_tag[1], "off")){
+		dump_flg = 0;
+	}
+}
+
 /* ×èÈû·¢ËÍ */
 void ___send(void)
 {
@@ -203,32 +215,7 @@ struct command_t gt_comman_client[] = {
 		.tag_p		= NULL,
 		.help 		= "show help",
 	},
-
-	{
-		.name		= "client_list",
-		.com_fun	= printf_client_list,
-		.tag_num	= 0,
-		.tag_p		= NULL,
-		.help		= "show client listt",
-
-	},
 	
-	{
-		.name		= "p2p_test_list",
-		.com_fun	= printf_p2p_test_node_list,
-		.tag_num	= 0,
-		.tag_p		= NULL,
-		.help		= "show p2p test list",
-
-	},	
-	{
-		.name		= "p2p_sync_list",
-		.com_fun	= printf_p2p_sync_node_list,
-		.tag_num	= 0,
-		.tag_p		= NULL,
-		.help		= "show p2p sync list",
-
-	},	
 	{
 		.name		= "?",
 		.com_fun	= __help,
@@ -238,6 +225,49 @@ struct command_t gt_comman_client[] = {
 	},
 
 	{
+			.name		= "send",
+			.com_fun	= __send,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "you can send msg to client",
+	},
+
+	{
+			.name		= "dump",
+			.com_fun	= __cli_dump,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "dump recv data",
+	},
+
+/*
+	{
+			.name		= "client_list",
+			.com_fun	= printf_client_list,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "show client listt",
+	
+		},
+		
+		{
+			.name		= "p2p_test_list",
+			.com_fun	= printf_p2p_test_node_list,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "show p2p test list",
+	
+		},	
+		{
+			.name		= "p2p_sync_list",
+			.com_fun	= printf_p2p_sync_node_list,
+			.tag_num	= 0,
+			.tag_p		= NULL,
+			.help		= "show p2p sync list",
+	
+		},
+
+	{
 		.name		= "call",
 		.com_fun	= __get_info,
 		.tag_num	= 0,
@@ -245,13 +275,7 @@ struct command_t gt_comman_client[] = {
 		.help		= "you can call client",
 	},
 
-	{
-		.name		= "send",
-		.com_fun	= __send,
-		.tag_num	= 0,
-		.tag_p		= NULL,
-		.help		= "you can send msg to client",
-	},
+	
 
 	{
 		.name		= "_send",
@@ -316,6 +340,7 @@ struct command_t gt_comman_client[] = {
 		.tag_p		= NULL,
 		.help		= "test",
 	},
+	*/
 
 	{
 		.name		= NULL,
@@ -324,6 +349,7 @@ struct command_t gt_comman_client[] = {
 		.tag_p		= NULL,
 		.help 		= NULL,
 	},
+	
 };
 
 
