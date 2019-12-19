@@ -58,6 +58,8 @@ int main(int argc,char **argv)
 	device_id = (argv[1]);
 	printf("%s\r\n", device_id);
 	set_name(device_id, strlen(device_id) + 1);
+	set_custmoer("test", strlen("test") + 1);
+	set_passwd(1234);
 	
     sockfd = socket(PF_INET, SOCK_DGRAM, 0);
 

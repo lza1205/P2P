@@ -56,11 +56,17 @@ void *server_recv_pthread(void *pdata)
 			dump_data(recvbuf,ret);
 
 			printf("affairs is %d\r\n", head->affairs);
-			for(i = 0; aff_table[i].aff_fun != NULL; i++)
+
+			if(is_max_login())//超过最大登录数量了
 			{
-				if(aff_table[i].aff == head->affairs)
+				printf("max login !! pls call lianzhian(13510979604) \r\n");
+			}else{
+				for(i = 0; aff_table[i].aff_fun != NULL; i++)
 				{
-					aff_table[i].aff_fun(sockfd, recvbuf, ret, &clientaddr);
+					if(aff_table[i].aff == head->affairs)
+					{
+						aff_table[i].aff_fun(sockfd, recvbuf, ret, &clientaddr);
+					}
 				}
 			}
 		}

@@ -44,7 +44,9 @@ int service_sql_init(void)
 	if(!(sock = mysql_real_connect(&mysql, "localhost", "root", "lza1205", "p2p_user_list", 0, NULL, 0))){
 		fprintf(stderr, "Couldn't connect to engine!\n%s\n\n", mysql_error(&mysql));
 		perror("");
+		#if QDY_EN_MYSQL
 		exit(1);
+		#endif
 	}
 
 	sql_table_update_all("device", "is_online", "offline");

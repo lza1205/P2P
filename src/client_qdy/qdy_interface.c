@@ -6,16 +6,30 @@
 #include "config.h"
 #include "agent_proto.h"
 
-int (*net_send)(char *buf, int len);
+int (*net_send)(unsigned char *buf, int len);
 
-int my_name[USER_NAME_LEN];
+static char my_name[USER_NAME_LEN];
+static unsigned int passwd = 1234;
+static char my_customer[USER_NAME_LEN];
+
 
 void set_name(char *name, int len)
 {
 	memcpy(my_name, name, __min(USER_NAME_LEN, len));
 }
 
-void set_net_send(int (*send)(char *buf, int len))
+void set_passwd(unsigned int pw)
+{
+	passwd = pw;
+}
+
+void set_customer(char *customer, int len)
+{
+	memcpy(my_customer, customer, __min(USER_NAME_LEN, len));
+}
+
+
+void set_net_send(int (*send)(unsigned char *buf, int len))
 {
 	net_send = send;
 }
@@ -91,6 +105,7 @@ void hexdump(
                 char *s,  
                 int l)  
 {  
+#if 0
     int n = 0;  
   
     fprintf(f, "%s", title);  
@@ -102,9 +117,10 @@ void hexdump(
     }  
   
     fprintf(f, "\n");
+#endif
 }
 
-void dump_data(char *buf, int len)
+void dump_data(unsigned char *buf, int len)
 {
 
 	hexdump(stdout, "== data ==",  
@@ -136,47 +152,8 @@ void __compages_head(struct check_head *head, unsigned int air, char *name, unsi
 	head->crc = __crc((char *)head, sizeof(struct check_head) - sizeof(int));
 }
 
-
-
-/*
-函数名:qdy_recv_data
-作用
-*/
-void qdy_recv_data(char *recvbuf, int len)
-{
-	struct check_head *head;
-	if (len < 0)
-	{
-		perror("my_recvfrom_handle");
-		return;
-	}
-	else
-	{
-		head = (struct check_head *)recvbuf;
-
-		/* 检查长度 */
-		if(len < sizeof(struct check_head))
-			return;
-
-		/* 对数据包头部进行校验 */
-		if(check_head_crc(head) != 0)
-			return;			
-
-		switch(head->affairs)
-		{
-			case _aff_client_send_data_:
-				__qdy_recv_data(recvbuf, len);
-				break;
-
-			case _aff_client_send_data_ack_:
-				//暂时不做任何处理
-				break;
-		}
-	}
-}
-
-
-void __qdy_recv_data(char *buf, int len)
+void qdy_resolve_recv_data(unsigned char *buf, int len);
+void __qdy_recv_data(unsigned char *buf, int len)
 {
 	/* 发送应答数据 */	
 	struct proto_c_send_data proto, *recv_proto;
@@ -211,18 +188,57 @@ void __qdy_recv_data(char *buf, int len)
 }
 
 
-int qdy_send_data(char *name, char *data, int len)
+/*
+函数名:qdy_recv_data
+作用
+*/
+void qdy_recv_data(unsigned char *recvbuf, int len)
+{
+	struct check_head *head;
+	if (len < 0)
+	{
+		perror("my_recvfrom_handle");
+		return;
+	}
+	else
+	{
+		head = (struct check_head *)recvbuf;
+
+		/* 检查长度 */
+		if(len < sizeof(struct check_head))
+			return;
+
+		/* 对数据包头部进行校验 */
+		if(check_head_crc(head) != 0)
+			return;			
+
+		switch(head->affairs)
+		{
+			case _aff_client_send_data_:
+				__qdy_recv_data(recvbuf, len);
+				break;
+
+			case _aff_client_send_data_ack_:
+				//暂时不做任何处理
+				break;
+		}
+	}
+}
+
+
+
+int qdy_send_data(unsigned char *name, char *data, int len)
 {
 	int ret;
 
 	struct proto_c_send_data proto;
 	struct check_head head;
 
-	char sendbuf[len + 200];
+	char sendbuf[1024];
 	int send_len;
 
 	/* 构造包头 */
-	__compages_head(&head, _aff_client_send_data_, my_name, 1234, "test");
+	__compages_head(&head, _aff_client_send_data_, my_name, passwd, my_customer);
 
 	memcpy((proto.dest_name), name, USER_NAME_LEN);
 	memcpy((proto.src_name), my_name, USER_NAME_LEN);

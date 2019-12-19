@@ -8,6 +8,20 @@
 /*
 节点登录
 */
+
+int login_num = 0;
+int is_max_login(void)
+{
+	#if (QDY_DEF_CLIENT_NUM != 0)
+	if(login_num > QDY_DEF_CLIENT_NUM)
+	{
+		return 1;
+	}
+	#else
+	return 0;
+	#endif
+}
+
 void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr)
 {
 	int ret;
@@ -15,6 +29,9 @@ void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clien
 	struct proto_s_login_ack ack;
 	char version[50];
 	char passwd[20];
+	char send_buf[1204];
+	int send_len;
+
 	struct check_head *head = (struct check_head *)buf;
 #if 0
 	dbg_printf("name %s  \npasswd %d \n",
@@ -29,7 +46,17 @@ void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clien
 	#if P2P_SERVER_SQL_AUTO_INSERT
 	sql_table_insert("device", "name", name);
 	#endif
+
 	ret = service_sql_select(name, passwd);
+	printf("passwd is %s \r\n", passwd);
+	/*
+	if(atoi(passwd) != head->passwd)
+	{
+		ack.ack = -1;
+		goto out;
+	}
+	*/
+	
 	if(ret == 0)
 	{
 		sql_table_update_string("device", "name", name, "ip", inet_ntoa(clientaddr->sin_addr));
@@ -40,9 +67,9 @@ void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clien
 		ack.ack = -1;
 	}
 
+out:
 	/* 向客户端应答数据 */
-	char send_buf[1204];
-	int send_len;
+	
 	
 
 	
@@ -57,7 +84,8 @@ void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clien
 
 	p2p_sendto(sockfd, (char *)send_buf, send_len, 0, (struct sockaddr *)clientaddr,
 		   sizeof(struct sockaddr));
-	
+
+	login_num ++;
 }
 
 
