@@ -18,14 +18,14 @@ void qdy_resolve_recv_data(unsigned char *buf, int len)
 	recv_proto = (struct proto_c_send_data *)(buf + sizeof(struct check_head));
 	recv_data = (char *)(buf + sizeof(struct check_head) + sizeof(struct proto_c_send_data));
 
-	/*
+	
 	printf("recv from %s 's %s data : [%s] \r\n", recv_proto->src_name, 
 										((head->affairs == _aff_client_p2p_data_)?"stun":"turn"),
 										recv_data);	
-	*/
-	//发送数据
 	
-	qdy_send_data(recv_proto->src_name, (unsigned char *)msg, strlen(msg) + 1);
+	//发送数据
+
+	//qdy_send_data(recv_proto->src_name, (unsigned char *)msg, strlen(msg) + 1);
 }
 
 

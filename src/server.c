@@ -49,6 +49,9 @@ int main(int argc, char *argv[])
 	/* TCP 子线程 */
 	server_updata_init();
 
+	/* TCP 连接功能*/
+	create_tcp_server_for_event();
+
 //	__mysql_debug();
 
 	while(1)

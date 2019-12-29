@@ -40,6 +40,7 @@ void *server_recv_pthread(void *pdata)
 		{
 			head = (struct check_head *)recvbuf;
 
+			dump_data(recvbuf,ret);
 			/* 检查长度 */
 			if(ret < sizeof(struct check_head))
 				continue;
@@ -53,9 +54,9 @@ void *server_recv_pthread(void *pdata)
 			/* 权限检查 */
 
 //			dbg_printf("addr %p", val);
-			dump_data(recvbuf,ret);
+			
 
-			printf("affairs is %d\r\n", head->affairs);
+			printf("affairs is %d %s \r\n", head->affairs, head->name);
 
 			if(is_max_login())//超过最大登录数量了
 			{

@@ -21,6 +21,14 @@ struct aff_info{
 };
 
 
+struct tcp_aff_info{
+	unsigned int aff;	 /* 事务类型 */
+
+	/* 事务处理函数 */
+	void (*aff_fun)(void *pfd, char *buf, int len);
+};
+
+
 /*
 存储 json 结构体的数据
 */
@@ -36,8 +44,10 @@ struct json_data{
 __SERVER_AFF_EXT_ struct aff_info aff_table[];
 
 
+
 void aff_clientt_login(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr);
 void aff_client_sync(int sockfd, char *buf, int len, struct sockaddr_in *clientaddr);
+void server_tcp_recv(void *iCliFd, char *buf, int iLen);
 
 
 #endif

@@ -21,6 +21,7 @@ void set_net_send(int (*send)(unsigned char *buf, int len));
 void qdy_resolve_recv_data(unsigned char *buf, int len);
 void set_name(char *name, int len);
 void dump_data(unsigned char *buf, int len);
+int qdy_sync_server(void);
 
 
 

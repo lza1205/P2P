@@ -138,11 +138,15 @@ volatile unsigned int key_cnt = 0;
 
 void __compages_head(struct check_head *head, unsigned int air, char *name, unsigned int passwd, char *customer)
 {
+	memset(head, 0, sizeof(struct check_head));
+
 	head->affairs = air;
 
-	memcpy(head->name, name, USER_NAME_LEN);	
+	memset(head->name, 0, USER_NAME_LEN);
+	strcpy(head->name, name);	
 	head->passwd = passwd;
-	memcpy(head->customer, customer, USER_NAME_LEN);
+	memset(head->customer, 0, USER_NAME_LEN);
+	strcpy(head->customer, customer);
 	
 	key_cnt ++;
 
@@ -240,8 +244,11 @@ int qdy_send_data(unsigned char *name, char *data, int len)
 	/* 构造包头 */
 	__compages_head(&head, _aff_client_send_data_, my_name, passwd, my_customer);
 
-	memcpy((proto.dest_name), name, USER_NAME_LEN);
-	memcpy((proto.src_name), my_name, USER_NAME_LEN);
+	memset(proto.dest_name, 0, USER_NAME_LEN);
+	strcpy((proto.dest_name), name);
+
+	memset(proto.src_name, 0, USER_NAME_LEN);
+	strcpy((proto.src_name), my_name);
 	proto.c_proto = _proto_c_msg_;		/* 协议 */
 
 	memcpy(sendbuf, &head, sizeof(head));
@@ -252,6 +259,23 @@ int qdy_send_data(unsigned char *name, char *data, int len)
 
 	//set_net_send(my_send);
 	ret = net_send((char *)sendbuf, send_len);
+
+}
+
+
+
+
+int qdy_sync_server(void)
+{
+	int ret;
+
+	struct check_head head;
+
+	/* 构造包头 */
+	__compages_head(&head, _aff_client_sync_, my_name, passwd, my_customer);
+
+	//set_net_send(my_send);
+	ret = net_send((char *)&head, sizeof(struct check_head));
 
 }
 

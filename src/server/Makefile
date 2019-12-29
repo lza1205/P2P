@@ -6,3 +6,6 @@ obj-y += server_sql.o
 obj-y += server_updata.o
 obj-y += server_conf.o
 obj-y += server_list.o
+obj-y += server_event.o
+obj-y += server_tcp_aff.o
+obj-y += server_client_node_list.o

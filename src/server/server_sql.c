@@ -49,10 +49,10 @@ int service_sql_init(void)
 		#endif
 	}
 
-	sql_table_update_all("device", "is_online", "offline");
-	sql_table_update_all("network", "is_online", "offline");
-	sql_table_update_all("system", "is_online", "offline");
-	sql_table_update_all("other", "is_online", "offline");
+	sql_table_update_all("device", "is_online", "NO");
+	sql_table_update_all("network", "is_online", "NO");
+	sql_table_update_all("system", "is_online", "NO");
+	sql_table_update_all("other", "is_online", "NO");
 
 	app_printf("mysql init is ok \r\n");
 	return 0;

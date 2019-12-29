@@ -11,6 +11,11 @@
 /* TCP 服务器端口号 */
 #define SERVER_PORT_TCP				8080
 
+
+/* TCP 服务器升级端口号 */
+#define SERVER_PORT_TCP_UPDATE				8081
+
+
 /* 版本号 */
 #define CLIENT_VERSION		"client-15.07.27.1"	
 #define SERVER_VERSION		"server-15.05.15"

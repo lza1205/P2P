@@ -94,7 +94,8 @@ volatile unsigned int key_cnt = 0;
 
 void __compages_head(struct check_head *head, unsigned int air, char *name, unsigned int passwd)
 {
-	
+
+	memset(head, 0, sizeof(struct check_head));
 	struct tm timenow;
 	/* 获取系统时间 */
 	get_sys_time(&timenow);
@@ -104,6 +105,7 @@ void __compages_head(struct check_head *head, unsigned int air, char *name, unsi
 	head->type = sys_cfg.sys_type;
 	memcpy(head->MID, sys_cfg.mastername, sizeof(sys_cfg.mastername));
 */
+	memset(head->name, 0, USER_NAME_LEN);
 	memcpy(head->name, name, USER_NAME_LEN);	
 	head->passwd = passwd;
 //	memcpy(head->version, CLIENT_VERSION, strlen(CLIENT_VERSION));

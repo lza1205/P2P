@@ -47,7 +47,7 @@ else
 		CFLAGS += -I $(shell pwd)/include -I/usr/include/mysql
 endif
 
-SER_LDLIB+=-lpthread -lssl -lcrypto -lm -ljson -lmysqlclient
+SER_LDLIB+=-lpthread -lssl -lcrypto -lm -ljson -lmysqlclient -levent
 SER_INC = -I/usr/include/mysql -L/usr/lib/mysql
 
 export CFLAGS LDFLAGS

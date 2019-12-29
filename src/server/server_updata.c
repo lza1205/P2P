@@ -143,7 +143,7 @@ void *tcp_update_server(void *pdata)
 	/* 主机字节顺序 */
 	/* 协议 */
 	my_addr.sin_family = AF_INET;
-	my_addr.sin_port = htons(SERVER_PORT_TCP);
+	my_addr.sin_port = htons(SERVER_PORT_TCP_UPDATE);
 	/* 当前IP 地址写入 */
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 
